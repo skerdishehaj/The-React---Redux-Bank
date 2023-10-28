@@ -1,26 +1,20 @@
-import { applyMiddleware, combineReducers, createStore } from 'redux';
 import accountReducer from './features/accounts/accountSlice';
 import customerReducer from './features/customers/customerSlice';
-import thunk from 'redux-thunk';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { configureStore } from '@reduxjs/toolkit';
 
-const rootReducer = combineReducers({
-  account: accountReducer,
-  customer: customerReducer,
+const store = configureStore({
+  reducer: {
+    account: accountReducer,
+    customer: customerReducer,
+  },
 });
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(applyMiddleware(thunk)),
-);
 
 export default store;
 
-// ! To use the middleware we need to follow 3 steps:
-// * 1. Import the middleware from redux-thunk
-// * 2. Add it to the store
-// * 3. Use it in the action creator
-
-// !  To install Redux Dev Tools follow 3 steps:
-// * 1. Install the Google Chrome extension
-// * 2. Install the corresponding npm package
-// * 3. Import the composeWithDevTools function and use it to wrap the applyMiddleware function
+// ! Redux Toolkit RTK is the modern way to write Redux code
+// * 1. It is an opinionated aproach, forcing us to use Redux best practices
+// * 2. Allows us to write Redux code faster, with less boilerplate
+// * 3. Gives us 3 big things:
+// *    a. it allows us to mutate the state directly in the reducer
+// *    b. action creators are generated automatically
+// *    c. automatic setup of thunk middleware and Redux Dev Tools
