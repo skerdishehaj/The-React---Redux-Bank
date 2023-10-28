@@ -8,6 +8,7 @@ function formatCurrency(value) {
 }
 
 function BalanceDisplay({ balance }) {
+  console.dir(balance);
   return <div className='balance'>{formatCurrency(balance)}</div>;
 }
 
