@@ -51,9 +51,8 @@ export default function accountReducer(state = initialStateAccount, action) {
 export function deposit(amount, currency) {
   if (currency === 'USD') return { type: 'account/deposit', payload: amount };
 
-  return async (dispatch) => {
-    dispatch({ type: 'account/comvertCurrency' });
-    console.dir(dispatch);
+  return async (dispatch, getState) => {
+    dispatch({ type: 'account/convertCurrency' });
     //API call
     const host = 'api.frankfurter.app';
     const res = await fetch(
