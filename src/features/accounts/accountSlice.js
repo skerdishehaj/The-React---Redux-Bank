@@ -4,14 +4,17 @@ const initialStateAccount = {
   balance: 0,
   loan: 0,
   loanPurpose: '',
+  isLoading: false,
 };
 
+// ! Reducers must be pure functions, which means they must not mutate the state. (no side effects)
 export default function accountReducer(state = initialStateAccount, action) {
   switch (action.type) {
     case 'account/deposit':
       return {
         ...state,
         balance: state.balance + action.payload,
+        isLoading: false,
       };
     case 'account/withdraw':
       return {
@@ -35,15 +38,32 @@ export default function accountReducer(state = initialStateAccount, action) {
         balance: state.balance - state.loan,
       };
 
+    case 'account/convertCurrency':
+      return {
+        ...state,
+        isLoading: true,
+      };
     default:
       return state;
   }
 }
 
-export function deposit(amount) {
-  return {
-    type: 'account/deposit',
-    payload: amount,
+export function deposit(amount, currency) {
+  if (currency === 'USD') return { type: 'account/deposit', payload: amount };
+
+  return async (dispatch) => {
+    dispatch({ type: 'account/comvertCurrency' });
+    console.dir(dispatch);
+    //API call
+    const host = 'api.frankfurter.app';
+    const res = await fetch(
+      `https://${host}/latest?amount=${amount}&from=${currency}&to=USD`,
+    );
+    const data = await res.json();
+    const convertedAmount = data.rates.USD;
+
+    //return action
+    dispatch({ type: 'account/deposit', payload: convertedAmount });
   };
 }
 export function withdraw(amount) {
